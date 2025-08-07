@@ -6,7 +6,7 @@ body {
     min-width: 320px;
     min-height: 100vh;
 
-    background-color: darkblue;
+    background-color: midnightblue;
     background-repeat: no-repeat;
     background-size: contain;
 }
@@ -16,7 +16,10 @@ h1 {
     font-size: 29px;
     line-height: 39px;
     font-weight: 300;
-    align-self: center;
-    margin-left: 15%;
-    margin-right: 15%;
+    text-align: center;
+}
+
+p{
+    font-family: "JetBrains Mono", Inter, system-ui, sans-serif;
+    text-align: center;
 }
