@@ -6,9 +6,10 @@ body {
     min-width: 320px;
     min-height: 100vh;
 
-    background-color: midnightblue;
+    background-color: #1b1b32;
     background-repeat: no-repeat;
     background-size: contain;
+    font-family: "JetBrains Mono", sans-serif;
 }
 
 .wrapper {
@@ -31,8 +32,35 @@ h1 {
 }
 
 p{
-    font-family: "JetBrains Mono", Inter, system-ui, sans-serif;
     text-align: center;
+    font-size: 18px;
+}
+
+.description {
+    font-style: italic;
+}
+
+h2 {
+    font-family: Impact, serif;
+    text-align: center;
+    font-weight: lighter;
+}
+
+.item p {
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+.left {
+    text-align: left;
+    width: 75%;
+}
+
+.right {
+    text-align: right;
+    width: 25%;
 }
 
 footer {
@@ -42,6 +70,6 @@ footer {
 
 hr {
     height: 2px;
-    background-color: navy;
-    border-color: navy;
+    background-color: #1b1b32;
+    border-color: #1b1b32;
 }
