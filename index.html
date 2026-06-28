@@ -1,44 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <title>Portfolio</title>
-    <link rel="stylesheet" href="/styles/index.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pastel Flap</title>
+  <style>
+    :root {
+      --bg: #fdfcf8;
+      --panel: #f4f6f8;
+      --text: #4b5563;
+      --accent: #a78bfa;
+      --canvas-bg: #e8f0f2;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--bg);
+      font-family: system-ui, -apple-system, sans-serif;
+      color: var(--text);
+    }
+    .container {
+      background: var(--panel);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      text-align: center;
+      max-width: 440px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin: 0 0 0.5rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .score-board {
+      font-family: monospace;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+    canvas {
+      background: var(--canvas-bg);
+      border-radius: 8px;
+      image-rendering: pixelated;
+      display: block;
+      margin: 0 auto;
+    }
+    .hint {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+    kbd {
+      background: #e5e7eb;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+  </style>
 </head>
 <body>
-    <div class="wrapper">
-        <main>
-            <h1>This is a noob trying something!</h1>
-            <p class="description">Made in Portugal!</p>
-            <hr>
-            <section>
-                <h2>Coffee</h2>
-<!--                <img src="https://cdn.freecodecamp.org/curriculum/css-cafe/coffee.jpg" alt="coffee icon"/>-->
-                <article class="item">
-                    <p class="left">French Vanilla</p><p class="right">3.00</p>
-                </article>
-                <article class="item">
-                    <p class="left">Caramel Macchiato</p><p class="right">3.75</p>
-                </article>
-                <article class="item">
-                    <p class="left">Pumpkin Spice</p><p class="right">3.50</p>
-                </article>
-                <article class="item">
-                    <p class="left">Hazelnut</p><p class="right">4.00</p>
-                </article>
-                <article class="item">
-                    <p class="left">Mocha</p><p class="right">4.50</p>
-                </article>
-                <iframe id="sofa-standings-embed-182545-58210" src="https://widgets.sofascore.com/embed/tournament/182545/season/58210/standings/Third-placed%20teams?widgetTitle=Third-placed%20teams&showCompetitionLogo=true" style=height:751px!important;max-width:768px!important;width:100%!important; frameborder="0" scrolling="no"></iframe>
-        <div style="font-size:12px;font-family:Arial,sans-serif;text-align:left">
-          Standings provided by <a target="_blank" href="https://www.sofascore.com/football/tournament/world/third-placed-teams/16#id:58210">Sofascore</a>
-        </div>
-            </section>
-        </main>
-        <hr>
-        <footer>
-            Copyright &copy; R1b3z 2025
-        </footer>
-    </div>
-</body>
-</html>
+  <div class="container">
+    <h1>Pastel Flap</h1>
+    <div class="score-board">Score: <span id="score">0</span></div>
+    <canvas id="game" width="400" height="300"></canvas>
+    <p class="hint">Pressiona <kbd>ESPAÇO</kbd> para voar ou reiniciar</p>
+  </div>
