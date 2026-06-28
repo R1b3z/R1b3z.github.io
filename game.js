@@ -1,0 +1,186 @@
+    /** @type {HTMLCanvasElement} */
+    const canvas = document.getElementById('game');
+    /** @type {CanvasRenderingContext2D} */
+    const ctx = canvas.getContext('2d');
+    /** @type {HTMLElement} */
+    const scoreEl = document.getElementById('score');
+
+    // Configuração
+    const GRAVITY = 0.25;
+    const JUMP_FORCE = -4.5;
+    const BASE_SPEED = 2.5;
+    const SPEED_STEP = 0.12;
+    const OBSTACLE_WIDTH = 36;
+    const GAP_HEIGHT = 110;
+    const OBSTACLE_SPACING = 180;
+    const GROUND_HEIGHT = 24;
+
+    // Estado do jogo
+    let bird = { x: 60, y: 150, w: 18, h: 18, vy: 0 };
+    let obstacles = [];
+    let score = 0;
+    let gameSpeed = BASE_SPEED;
+    let nextObstacleX = canvas.width + 100;
+    let isGameOver = false;
+    let groundOffset = 0;
+
+    /** Inicializa o jogo e começa o loop de renderização. */
+    function init() {
+      window.addEventListener('keydown', handleInput);
+      loop();
+    }
+
+    /** Lida com a entrada do teclado (espaço para pular/reiniciar). */
+    function handleInput(e) {
+      if (e.code !== 'Space') return;
+      e.preventDefault();
+      if (isGameOver) reset();
+      else bird.vy = JUMP_FORCE;
+    }
+
+    /** Reinicia todas as variáveis de estado para um novo jogo. */
+    function reset() {
+      bird.y = 150;
+      bird.vy = 0;
+      obstacles = [];
+      score = 0;
+      gameSpeed = BASE_SPEED;
+      nextObstacleX = canvas.width + 100;
+      isGameOver = false;
+      updateScoreUI();
+    }
+
+    /** Atualiza a interface com o score atual. */
+    function updateScoreUI() {
+      scoreEl.textContent = score;
+    }
+
+    /** Atualiza a física, colisões e geração de obstáculos. */
+    function update() {
+      if (isGameOver) return;
+
+      // Física do pássaro
+      bird.vy += GRAVITY;
+      bird.y += bird.vy;
+
+      // Limites vertical
+      if (bird.y < 0 || bird.y + bird.h > canvas.height - GROUND_HEIGHT) {
+        endGame();
+        return;
+      }
+
+      // Geração de obstáculos baseada em distância
+      nextObstacleX -= gameSpeed;
+      if (nextObstacleX <= 0) {
+        spawnObstacle();
+        nextObstacleX += OBSTACLE_SPACING;
+      }
+
+      // Movimento e colisão dos obstáculos
+      for (let i = obstacles.length - 1; i >= 0; i--) {
+        const obs = obstacles[i];
+        obs.x -= gameSpeed;
+
+        if (checkCollision(bird, obs)) {
+          endGame();
+          return;
+        }
+
+        if (!obs.passed && obs.x + obs.w < bird.x) {
+          obs.passed = true;
+          score++;
+          gameSpeed = BASE_SPEED + score * SPEED_STEP;
+          updateScoreUI();
+        }
+
+        if (obs.x + obs.w < 0) obstacles.splice(i, 1);
+      }
+
+      // Scroll do chão (efeito visual)
+      groundOffset = (groundOffset + gameSpeed) % 24;
+    }
+
+    /** Gera um par de obstáculos (topo e base) com um espaço aleatório. */
+    function spawnObstacle() {
+      const minTop = 30;
+      const maxTop = canvas.height - GROUND_HEIGHT - GAP_HEIGHT - 30;
+      const topH = Math.floor(Math.random() * (maxTop - minTop + 1)) + minTop;
+
+      obstacles.push({ x: canvas.width, y: 0, w: OBSTACLE_WIDTH, h: topH, passed: false });
+      obstacles.push({ x: canvas.width, y: topH + GAP_HEIGHT, w: OBSTACLE_WIDTH, h: canvas.height - topH - GAP_HEIGHT, passed: false });
+    }
+
+    /** Verifica colisão AABB entre o pássaro e um obstáculo. */
+    function checkCollision(a, b) {
+      return (
+        a.x < b.x + b.w &&
+        a.x + a.w > b.x &&
+        a.y < b.y + b.h &&
+        a.y + a.h > b.y
+      );
+    }
+
+    /** Finaliza o jogo e prepara o estado para reinício. */
+    function endGame() {
+      isGameOver = true;
+    }
+
+    /** Renderiza o frame atual no canvas. */
+    function draw() {
+      // Fundo
+      ctx.fillStyle = '#e8f0f2';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Chão com padrão pixelado
+      ctx.fillStyle = '#c1d5d8';
+      ctx.fillRect(0, canvas.height - GROUND_HEIGHT, canvas.width, GROUND_HEIGHT);
+      ctx.fillStyle = '#a8bfc2';
+      for (let x = -groundOffset; x < canvas.width; x += 24) {
+        ctx.fillRect(x, canvas.height - GROUND_HEIGHT, 12, 12);
+      }
+
+      // Obstáculos
+      ctx.fillStyle = '#8ec5b2';
+      for (const obs of obstacles) {
+        ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+        // Detalhe pixel interno
+        ctx.fillStyle = '#76a896';
+        ctx.fillRect(obs.x + 4, obs.y + 4, obs.w - 8, obs.h - 8);
+        ctx.fillStyle = '#8ec5b2';
+      }
+
+      // Pássaro (pixel art simples)
+      ctx.fillStyle = '#f6c67d';
+      ctx.fillRect(bird.x, bird.y, bird.w, bird.h);
+      ctx.fillStyle = '#e59866';
+      ctx.fillRect(bird.x + 12, bird.y + 4, 6, 6); // bico
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(bird.x + 10, bird.y + 2, 4, 4); // olho
+      ctx.fillStyle = '#2c3e50';
+      ctx.fillRect(bird.x + 12, bird.y + 2, 2, 2); // pupila
+
+      // Overlay Game Over
+      if (isGameOver) {
+        ctx.fillStyle = 'rgba(30, 41, 59, 0.6)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 20px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 20);
+        
+        ctx.font = '16px monospace';
+        ctx.fillText(`Score: ${score}`, canvas.width / 2, canvas.height / 2 + 10);
+        ctx.font = '12px monospace';
+        ctx.fillText('ESPAÇO para reiniciar', canvas.width / 2, canvas.height / 2 + 35);
+      }
+    }
+
+    /** Loop principal do jogo. */
+    function loop() {
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    init();
