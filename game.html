@@ -156,9 +156,38 @@
     let groundOffset = 0;
     let lastTime = null;
 
+    function applyTheme(theme) {
+      const isDark = theme === 'dark';
+    
+      document.body.classList.toggle('dark', isDark);
+    
+      themeIcon.textContent = isDark ? '☀️' : '🌙';
+      themeText.textContent = isDark ? 'Light' : 'Dark';
+    
+      localStorage.setItem('pastel-flap-theme', theme);
+    }
+  
+    function toggleTheme() {
+      const isDark = document.body.classList.contains('dark');
+      applyTheme(isDark ? 'light' : 'dark');
+    }
+  
+    function loadSavedTheme() {
+      const savedTheme = localStorage.getItem('pastel-flap-theme') || 'light';
+      applyTheme(savedTheme);
+    }
+  
+    function cssVar(name) {
+      return getComputedStyle(document.body).getPropertyValue(name).trim();
+    }
+
     /** Inicializa o jogo, gera o primeiro obstáculo e começa o loop. */
     function init() {
+      loadSavedTheme();
+    
+      themeToggle.addEventListener('click', toggleTheme);
       window.addEventListener('keydown', handleInput);
+    
       spawnObstacle();
       requestAnimationFrame(loop);
     }
@@ -264,25 +293,32 @@
 
     /** Renderiza o frame atual no canvas. */
     function draw() {
+      const canvasBg = cssVar('--canvas-bg');
+      const ground = cssVar('--ground');
+      const groundDetail = cssVar('--ground-detail');
+      const obstacle = cssVar('--obstacle');
+      const obstacleInner = cssVar('--obstacle-inner');
+      const overlay = cssVar('--overlay');
+      
       // Fundo
-      ctx.fillStyle = '#e8f0f2';
+      ctx.fillStyle = canvasBg;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Chão com padrão pixelado
-      ctx.fillStyle = '#c1d5d8';
+      ctx.fillStyle = ground;
       ctx.fillRect(0, canvas.height - GROUND_HEIGHT, canvas.width, GROUND_HEIGHT);
-      ctx.fillStyle = '#a8bfc2';
+      ctx.fillStyle = groundDetail;
       for (let x = -groundOffset; x < canvas.width; x += 24) {
         ctx.fillRect(x, canvas.height - GROUND_HEIGHT, 12, 12);
       }
 
       // Obstáculos
-      ctx.fillStyle = '#8ec5b2';
+      ctx.fillStyle = obstacle;
       for (const obs of obstacles) {
         ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
-        ctx.fillStyle = '#76a896';
+        ctx.fillStyle = obstacleInner;
         ctx.fillRect(obs.x + 5, obs.y + 5, obs.w - 10, obs.h - 10);
-        ctx.fillStyle = '#8ec5b2';
+        ctx.fillStyle = obstacle;
       }
 
       // Pássaro (pixel art simples)
@@ -297,7 +333,7 @@
 
       // Overlay Game Over
       if (isGameOver) {
-        ctx.fillStyle = 'rgba(30, 41, 59, 0.6)';
+        ctx.fillStyle = overlay;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.fillStyle = '#ffffff';
@@ -325,31 +361,6 @@
       update(delta);
       draw();
       requestAnimationFrame(loop);
-    }
-
-    function applyTheme(theme) {
-      const isDark = theme === 'dark';
-    
-      document.body.classList.toggle('dark', isDark);
-    
-      themeIcon.textContent = isDark ? '☀️' : '🌙';
-      themeText.textContent = isDark ? 'Light' : 'Dark';
-    
-      localStorage.setItem('pastel-flap-theme', theme);
-    }
-  
-    function toggleTheme() {
-      const isDark = document.body.classList.contains('dark');
-      applyTheme(isDark ? 'light' : 'dark');
-    }
-  
-    function loadSavedTheme() {
-      const savedTheme = localStorage.getItem('pastel-flap-theme') || 'light';
-      applyTheme(savedTheme);
-    }
-  
-    function cssVar(name) {
-      return getComputedStyle(document.body).getPropertyValue(name).trim();
     }
 
     init();
