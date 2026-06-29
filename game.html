@@ -76,7 +76,7 @@
     }
     h1 {
       font-size: 1.5rem;
-      margin: 0 0 0.5rem;
+      margin: 0;
       font-weight: 600;
       letter-spacing: -0.02em;
     }
@@ -97,10 +97,11 @@
     .hint {
       margin-top: 1rem;
       font-size: 0.85rem;
-      opacity: 0.7;
+      color: var(--muted-text);
     }
     kbd {
-      background: #e5e7eb;
+      background: var(--kbd-bg);
+      color: var(--text);
       padding: 2px 6px;
       border-radius: 4px;
       font-family: monospace;
@@ -130,6 +131,10 @@
     const ctx = canvas.getContext('2d');
     /** @type {HTMLElement} */
     const scoreEl = document.getElementById('score');
+
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
 
     // Configuração
     const GRAVITY = 0.25;
@@ -320,6 +325,31 @@
       update(delta);
       draw();
       requestAnimationFrame(loop);
+    }
+
+    function applyTheme(theme) {
+      const isDark = theme === 'dark';
+    
+      document.body.classList.toggle('dark', isDark);
+    
+      themeIcon.textContent = isDark ? '☀️' : '🌙';
+      themeText.textContent = isDark ? 'Light' : 'Dark';
+    
+      localStorage.setItem('pastel-flap-theme', theme);
+    }
+  
+    function toggleTheme() {
+      const isDark = document.body.classList.contains('dark');
+      applyTheme(isDark ? 'light' : 'dark');
+    }
+  
+    function loadSavedTheme() {
+      const savedTheme = localStorage.getItem('pastel-flap-theme') || 'light';
+      applyTheme(savedTheme);
+    }
+  
+    function cssVar(name) {
+      return getComputedStyle(document.body).getPropertyValue(name).trim();
     }
 
     init();
