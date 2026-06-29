@@ -11,6 +11,27 @@
       --text: #4b5563;
       --accent: #a78bfa;
       --canvas-bg: #e8f0f2;
+      --muted-text: rgba(75, 85, 99, 0.7);
+      --ground: #c1d5d8;
+      --ground-detail: #a8bfc2;
+      --obstacle: #8ec5b2;
+      --obstacle-inner: #76a896;
+      --kbd-bg: #e5e7eb;
+      --overlay: rgba(30, 41, 59, 0.6);
+    }
+    body.dark {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --text: #e5e7eb;
+      --muted-text: rgba(229, 231, 235, 0.65);
+      --accent: #c4b5fd;
+      --canvas-bg: #172033;
+      --ground: #334155;
+      --ground-detail: #475569;
+      --obstacle: #5eead4;
+      --obstacle-inner: #2dd4bf;
+      --kbd-bg: #334155;
+      --overlay: rgba(2, 6, 23, 0.72);
     }
     body {
       margin: 0;
@@ -30,6 +51,28 @@
       text-align: center;
       max-width: 700px;
       width: 100%;
+    }
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+  
+    .theme-toggle {
+      border: 0;
+      border-radius: 999px;
+      padding: 0.45rem 0.8rem;
+      background: var(--kbd-bg);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+  
+    .theme-toggle:hover {
+      opacity: 0.85;
     }
     h1 {
       font-size: 1.5rem;
@@ -66,7 +109,15 @@
 </head>
 <body>
   <div class="container">
-    <h1>Pastel Flap</h1>
+    <div class="top-bar">
+      <h1>Pastel Flap</h1>
+    
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Alternar modo escuro">
+        <span id="themeIcon">🌙</span>
+        <span id="themeText">Dark</span>
+      </button>
+    </div>
+    
     <div class="score-board">Score: <span id="score">0</span></div>
     <canvas id="game" width="640" height="420"></canvas>
     <p class="hint">Pressiona <kbd>ESPAÇO</kbd> para voar ou reiniciar</p>
