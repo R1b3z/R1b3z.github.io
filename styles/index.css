@@ -45,6 +45,11 @@ a {
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
+.middle {
+    backdrop-filter: blur(14px);
+    margin: 0 auto;
+}
+
 main {
     width: 100%;
 }
