@@ -263,8 +263,8 @@ section {
 
 .middle {
   width: 100%;
-  max-width: 768px;
-  min-width: 700px;
+  max-width: 900px;
+  min-width: 768px;
   height: 872px;
   border: 0;
   display: block;
