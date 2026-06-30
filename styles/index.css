@@ -254,6 +254,22 @@ section {
     padding-top: 24px;
 }
 
+.iframe-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.middle {
+  width: 100%;
+  max-width: 768px;
+  min-width: 700px;
+  height: 872px;
+  border: 0;
+  display: block;
+}
+
 footer {
     margin-top: 28px;
 
