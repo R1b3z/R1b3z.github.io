@@ -2,6 +2,10 @@
 
 A simple coffee menu with a GTA VI radio station embeded, just for fun.
 
+```bash
+[Check the page here!](r1b3z.github.io)
+```
+
 ## What the website does
 
 - Main page with radio and a simple but pretty menu
