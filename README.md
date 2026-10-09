@@ -2,7 +2,7 @@
 
 A simple coffee menu with a GTA VI radio station embeded, just for fun.
 
-[Check the page here!](r1b3z.github.io)
+[Check the page here!](https://r1b3z.github.io)
 
 
 ## What the website does
